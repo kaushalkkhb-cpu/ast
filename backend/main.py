@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from sqlalchemy import text
 from database import Base, engine, get_db
-from auth import router as auth_router
+from auth import router as auth_router, get_current_user
 import models  # Register ORM models before creating tables
 
 app = FastAPI(title="AST PRO API", version="0.2.0")
@@ -45,7 +45,7 @@ def database_health():
     return {"status": "ok", "database": "connected"}
 
 @app.get("/api/dashboard")
-def dashboard():
+def dashboard(user=Depends(get_current_user)):
     return {
         "mode": "PAPER / DEMO",
         "market_data": "SAMPLE",
